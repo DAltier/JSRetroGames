@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultimate Memory Game</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <header class="game-header">
+        <h1 class="game-title">
+          <span class="title-icon">🧠</span>
+          Ultimate Memory Game
+          <span class="title-icon">🎮</span>
+        </h1>
+      </header>
+
+      <div class="game-controls">
+        <div class="difficulty-selector">
+          <label>Difficulty:</label>
+          <div class="difficulty-buttons">
+            <button class="difficulty-btn active" data-level="easy">Easy (4x3)</button>
+            <button class="difficulty-btn" data-level="medium">Medium (4x4)</button>
+            <button class="difficulty-btn" data-level="hard">Hard (6x4)</button>
+            <button class="difficulty-btn" data-level="expert">Expert (6x6)</button>
+          </div>
+        </div>
+
+        <div class="theme-selector">
+          <label>Theme:</label>
+          <div class="theme-buttons">
+            <button class="theme-btn active" data-theme="food">🍔 Food</button>
+            <button class="theme-btn" data-theme="animals">🦁 Animals</button>
+            <button class="theme-btn" data-theme="emoji">😀 Emoji</button>
+            <button class="theme-btn" data-theme="space">🚀 Space</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-icon">⏱️</span>
+          <span class="stat-label">Time:</span>
+          <span class="stat-value" id="timer">00:00</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-label">Moves:</span>
+          <span class="stat-value" id="moves">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-label">Score:</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🏆</span>
+          <span class="stat-label">Best:</span>
+          <span class="stat-value" id="best-score">0</span>
+        </div>
+      </div>
+
+      <div class="power-ups">
+        <button class="power-up-btn" id="peek-btn" data-power="peek">
+          <span class="power-icon">👁️</span>
+          <span class="power-name">Peek</span>
+          <span class="power-count" id="peek-count">3</span>
+        </button>
+        <button class="power-up-btn" id="hint-btn" data-power="hint">
+          <span class="power-icon">💡</span>
+          <span class="power-name">Hint</span>
+          <span class="power-count" id="hint-count">2</span>
+        </button>
+        <button class="power-up-btn" id="shuffle-btn" data-power="shuffle">
+          <span class="power-icon">🔀</span>
+          <span class="power-name">Shuffle</span>
+          <span class="power-count" id="shuffle-count">1</span>
+        </button>
+      </div>
+
+      <div class="game-board" id="game-board">
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <div class="combo-indicator" id="combo-indicator">
+        <span class="combo-text">Combo x<span id="combo-count">1</span></span>
+      </div>
+
+      <div class="game-controls-bottom">
+        <button class="control-btn" id="new-game-btn"><span>🎲</span> New Game</button>
+        <button class="control-btn" id="pause-btn"><span>⏸️</span> Pause</button>
+        <button class="control-btn" id="sound-btn"><span>🔊</span> Sound On</button>
+        <button class="control-btn" id="leaderboard-btn"><span>📊</span> Leaderboard</button>
+      </div>
+
+      <div class="achievements-bar">
+        <h3>Achievements</h3>
+        <div class="achievements-list" id="achievements-list"></div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="game-over-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">🎉 Congratulations! 🎉</h2>
+        <div class="modal-stats">
+          <div class="final-stat">
+            <span class="final-stat-label">Time:</span>
+            <span class="final-stat-value" id="final-time">00:00</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Moves:</span>
+            <span class="final-stat-value" id="final-moves">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Score:</span>
+            <span class="final-stat-value" id="final-score">0</span>
+          </div>
+          <div class="star-rating" id="star-rating">
+            <span class="star">⭐</span>
+            <span class="star">⭐</span>
+            <span class="star">⭐</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="play-again-btn">Play Again</button>
+          <button class="modal-btn" id="next-level-btn">Next Level</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="pause-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">Game Paused</h2>
+        <p>Take a break! Your game is saved.</p>
+        <button class="modal-btn" id="resume-btn">Resume Game</button>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="leaderboard-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">🏆 Leaderboard</h2>
+        <div class="leaderboard-tabs">
+          <button class="tab-btn active" data-tab="easy">Easy</button>
+          <button class="tab-btn" data-tab="medium">Medium</button>
+          <button class="tab-btn" data-tab="hard">Hard</button>
+          <button class="tab-btn" data-tab="expert">Expert</button>
+        </div>
+        <div class="leaderboard-content" id="leaderboard-content">
+          <ol class="leaderboard-list" id="leaderboard-list"></ol>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="app.js"></script>
+  </body>
+</html>

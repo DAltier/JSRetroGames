@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultimate Space Invaders</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <header class="game-header">
+        <h1 class="game-title">
+          <span class="title-emoji">🚀</span>
+          Ultimate Space Invaders
+          <span class="title-emoji">👾</span>
+        </h1>
+      </header>
+
+      <div class="game-controls">
+        <div class="difficulty-selector">
+          <label>Difficulty:</label>
+          <div class="difficulty-buttons">
+            <button class="difficulty-btn active" data-level="easy">Easy</button>
+            <button class="difficulty-btn" data-level="medium">Medium</button>
+            <button class="difficulty-btn" data-level="hard">Hard</button>
+            <button class="difficulty-btn" data-level="insane">Insane</button>
+          </div>
+        </div>
+
+        <div class="mode-selector">
+          <label>Mode:</label>
+          <div class="mode-buttons">
+            <button class="mode-btn active" data-mode="classic">Classic</button>
+            <button class="mode-btn" data-mode="survival">Survival</button>
+            <button class="mode-btn" data-mode="boss-rush">Boss Rush</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-label">Score:</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">❤️</span>
+          <span class="stat-label">Lives:</span>
+          <span class="stat-value" id="lives">3</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🌊</span>
+          <span class="stat-label">Wave:</span>
+          <span class="stat-value" id="wave">1</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">💥</span>
+          <span class="stat-label">Kills:</span>
+          <span class="stat-value" id="kills">0</span>
+        </div>
+      </div>
+
+      <div class="power-ups-bar" id="power-ups-bar">
+        <div class="power-up" id="rapid-fire-power">
+          <span class="power-icon">⚡</span>
+          <span class="power-name">Rapid Fire</span>
+          <span class="power-count">0</span>
+        </div>
+        <div class="power-up" id="spread-shot-power">
+          <span class="power-icon">🔥</span>
+          <span class="power-name">Spread Shot</span>
+          <span class="power-count">0</span>
+        </div>
+        <div class="power-up" id="shield-power">
+          <span class="power-icon">🛡️</span>
+          <span class="power-name">Shield</span>
+          <span class="power-count">0</span>
+        </div>
+        <div class="power-up" id="nuke-power">
+          <span class="power-icon">💣</span>
+          <span class="power-name">Nuke</span>
+          <span class="power-count">0</span>
+        </div>
+      </div>
+
+      <div class="game-board">
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+      </div>
+
+      <div class="game-controls-bottom">
+        <button class="control-btn" id="start-btn"><span>🎮</span> Start Game</button>
+        <button class="control-btn" id="pause-btn" disabled><span>⏸️</span> Pause</button>
+        <button class="control-btn" id="reset-btn"><span>🔄</span> Reset</button>
+        <button class="control-btn" id="sound-btn"><span>🔊</span> Sound On</button>
+        <button class="control-btn" id="leaderboard-btn"><span>🏆</span> Leaderboard</button>
+      </div>
+
+      <div class="controls-help">
+        <h3>Controls:</h3>
+        <p><strong>←→</strong> Move ship | <strong>SPACE</strong> Shoot | <strong>1-4</strong> Use power-ups</p>
+        <p><strong>P</strong> Pause | <strong>R</strong> Reset | <strong>ESC</strong> Menu</p>
+      </div>
+
+      <div class="achievements-bar">
+        <h3>Achievements</h3>
+        <div class="achievements-list" id="achievements-list"></div>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal hidden" id="game-over-modal">
+      <div class="modal-content">
+        <h2 class="modal-title" id="game-over-title">🎉 Game Over! 🎉</h2>
+        <div class="modal-stats">
+          <div class="final-stat">
+            <span class="final-stat-label">Final Score:</span>
+            <span class="final-stat-value" id="final-score">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Waves Survived:</span>
+            <span class="final-stat-value" id="final-wave">1</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Enemies Defeated:</span>
+            <span class="final-stat-value" id="final-kills">0</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="play-again-btn">Play Again</button>
+          <button class="modal-btn" id="next-wave-btn">Next Wave</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave Complete Modal -->
+    <div class="modal hidden" id="wave-complete-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">🌟 Wave Complete! 🌟</h2>
+        <div class="modal-stats">
+          <div class="final-stat">
+            <span class="final-stat-label">Wave Bonus:</span>
+            <span class="final-stat-value" id="wave-bonus">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Accuracy:</span>
+            <span class="final-stat-value" id="wave-accuracy">0%</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="continue-wave-btn">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boss Battle Modal -->
+    <div class="modal hidden" id="boss-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">⚔️ Boss Incoming! ⚔️</h2>
+        <div class="boss-info">
+          <div class="boss-avatar" id="boss-avatar">👾</div>
+          <h3 id="boss-name">Alien Overlord</h3>
+          <div class="boss-health-bar">
+            <div class="boss-health" id="boss-health"></div>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="fight-boss-btn">Fight!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div class="modal hidden" id="pause-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">Game Paused</h2>
+        <p>Take a break! Your progress is saved.</p>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="resume-btn">Resume Game</button>
+          <button class="modal-btn" id="restart-btn">Restart Wave</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal hidden" id="leaderboard-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">🏆 Leaderboard</h2>
+        <div class="leaderboard-tabs">
+          <button class="tab-btn active" data-tab="easy">Easy</button>
+          <button class="tab-btn" data-tab="medium">Medium</button>
+          <button class="tab-btn" data-tab="hard">Hard</button>
+          <button class="tab-btn" data-tab="insane">Insane</button>
+        </div>
+        <div class="leaderboard-content">
+          <ol class="leaderboard-list" id="leaderboard-list"></ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div class="modal hidden" id="shop-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">🛒 Space Shop</h2>
+        <div class="shop-currency">
+          <span class="currency-icon">⭐</span>
+          <span class="currency-label">Credits:</span>
+          <span class="currency-value" id="credits">0</span>
+        </div>
+        <div class="shop-items">
+          <div class="shop-item" data-item="rapid-fire">
+            <div class="item-icon">⚡</div>
+            <div class="item-info">
+              <h4>Rapid Fire</h4>
+              <p>Increases fire rate</p>
+              <span class="item-cost">50 ⭐</span>
+            </div>
+            <button class="buy-btn">Buy</button>
+          </div>
+          <div class="shop-item" data-item="spread-shot">
+            <div class="item-icon">🔥</div>
+            <div class="item-info">
+              <h4>Spread Shot</h4>
+              <p>Triple shot attack</p>
+              <span class="item-cost">100 ⭐</span>
+            </div>
+            <button class="buy-btn">Buy</button>
+          </div>
+          <div class="shop-item" data-item="shield">
+            <div class="item-icon">🛡️</div>
+            <div class="item-info">
+              <h4>Energy Shield</h4>
+              <p>Temporary invincibility</p>
+              <span class="item-cost">75 ⭐</span>
+            </div>
+            <button class="buy-btn">Buy</button>
+          </div>
+          <div class="shop-item" data-item="nuke">
+            <div class="item-icon">💣</div>
+            <div class="item-info">
+              <h4>Screen Nuke</h4>
+              <p>Destroys all enemies</p>
+              <span class="item-cost">200 ⭐</span>
+            </div>
+            <button class="buy-btn">Buy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="particles-canvas"></canvas>
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="app.js"></script>
+  </body>
+</html>

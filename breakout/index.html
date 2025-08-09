@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultimate Breakout</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <header class="game-header">
+        <h1 class="game-title">
+          <span class="title-emoji">🧱</span>
+          Ultimate Breakout
+          <span class="title-emoji">🏓</span>
+        </h1>
+      </header>
+
+      <div class="game-controls">
+        <div class="difficulty-selector">
+          <label>Difficulty:</label>
+          <div class="difficulty-buttons">
+            <button class="difficulty-btn active" data-level="easy">Easy</button>
+            <button class="difficulty-btn" data-level="medium">Medium</button>
+            <button class="difficulty-btn" data-level="hard">Hard</button>
+            <button class="difficulty-btn" data-level="insane">Insane</button>
+          </div>
+        </div>
+
+        <div class="mode-selector">
+          <label>Mode:</label>
+          <div class="mode-buttons">
+            <button class="mode-btn active" data-mode="classic">Classic</button>
+            <button class="mode-btn" data-mode="power-up">Power-Up</button>
+            <button class="mode-btn" data-mode="survival">Survival</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-label">Score:</span>
+          <span class="stat-value" id="score">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">❤️</span>
+          <span class="stat-label">Lives:</span>
+          <span class="stat-value" id="lives">3</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">📊</span>
+          <span class="stat-label">Level:</span>
+          <span class="stat-value" id="level">1</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-label">Streak:</span>
+          <span class="stat-value" id="streak">0</span>
+        </div>
+      </div>
+
+      <div class="power-ups-bar" id="power-ups-bar">
+        <div class="power-up" id="multi-ball-power">
+          <span class="power-icon">⚡</span>
+          <span class="power-name">Multi-Ball</span>
+          <span class="power-count">2</span>
+        </div>
+        <div class="power-up" id="laser-power">
+          <span class="power-icon">🔫</span>
+          <span class="power-name">Laser</span>
+          <span class="power-count">1</span>
+        </div>
+        <div class="power-up" id="expand-paddle-power">
+          <span class="power-icon">↔️</span>
+          <span class="power-name">Expand</span>
+          <span class="power-count">1</span>
+        </div>
+        <div class="power-up" id="sticky-power">
+          <span class="power-icon">🌀</span>
+          <span class="power-name">Sticky</span>
+          <span class="power-count">1</span>
+        </div>
+      </div>
+
+      <div class="game-board">
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+      </div>
+
+      <div class="game-controls-bottom">
+        <button class="control-btn" id="start-btn"><span>🎮</span> Start Game</button>
+        <button class="control-btn" id="pause-btn" disabled><span>⏸️</span> Pause</button>
+        <button class="control-btn" id="reset-btn"><span>🔄</span> Reset</button>
+        <button class="control-btn" id="sound-btn"><span>🔊</span> Sound On</button>
+        <button class="control-btn" id="leaderboard-btn"><span>🏆</span> Leaderboard</button>
+      </div>
+
+      <div class="achievements-bar">
+        <h3>Achievements</h3>
+        <div class="achievements-list" id="achievements-list"></div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="game-over-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">🎉 Game Over! 🎉</h2>
+        <div class="modal-stats">
+          <div class="final-stat">
+            <span class="final-stat-label">Final Score:</span>
+            <span class="final-stat-value" id="final-score">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Level Reached:</span>
+            <span class="final-stat-value" id="final-level">1</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Best Streak:</span>
+            <span class="final-stat-value" id="final-streak">0</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="play-again-btn">Play Again</button>
+          <button class="modal-btn" id="next-level-btn">Next Level</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="level-complete-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">🌟 Level Complete! 🌟</h2>
+        <div class="modal-stats">
+          <div class="final-stat">
+            <span class="final-stat-label">Score:</span>
+            <span class="final-stat-value" id="level-score">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="final-stat-label">Bonus:</span>
+            <span class="final-stat-value" id="level-bonus">0</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn" id="continue-btn">Continue</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="pause-modal">
+      <div class="modal-content">
+        <h2 class="modal-title">Game Paused</h2>
+        <p>Take a break! Your game is saved.</p>
+        <button class="modal-btn" id="resume-btn">Resume Game</button>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="leaderboard-modal">
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">🏆 Leaderboard</h2>
+        <div class="leaderboard-tabs">
+          <button class="tab-btn active" data-tab="easy">Easy</button>
+          <button class="tab-btn" data-tab="medium">Medium</button>
+          <button class="tab-btn" data-tab="hard">Hard</button>
+          <button class="tab-btn" data-tab="insane">Insane</button>
+        </div>
+        <div class="leaderboard-content">
+          <ol class="leaderboard-list" id="leaderboard-list"></ol>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="app.js"></script>
+  </body>
+</html>
