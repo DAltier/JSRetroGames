@@ -2550,7 +2550,6 @@ input[type='radio'] + label:before {
 }
 
 .image:after {
-  background: linear-gradient(45deg, #d54857 20%, #2eaeff 100%);
   content: '';
   height: 100%;
   left: 0;
